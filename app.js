@@ -52,6 +52,33 @@ app.get('/places/:id', (req,res)=>{
       res.json(err);
     })
 });
+
+app.put('/places/:id',(req,res)=>{
+  //Place.findById---
+  let attributes = ['title', 'description', 'accepsCreditCard', 'openHour', 'closeHour'];
+  let placeParams = {};
+  attributes.forEach(attr=>{
+    if (Objects.prototype.hasOwnProperty.call(req.body,attr))
+      placeParams[attr] = req.body[attr]
+  });
+  Place.findOneAndUpdate({'_id': req.params.id},placeParams)
+  .then(doc=>{
+    res.json(doc);
+  }).catch(err=>{
+    console.log(err);
+    res.json(err);
+  })
+});
+
+app.delete('/places/:id', (req,res)=>{
+  Place.findByIdAndRemove(req.params.id)
+    .then(doc=>{
+      res.json({})
+    }).catch(err=<{
+      console.log(err);
+      res.json(err);
+    })
+})
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
