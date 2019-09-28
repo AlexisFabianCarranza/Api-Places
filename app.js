@@ -5,10 +5,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 //Importar datos
 const db = require('./config/database.js');
-const places =require('./routes/places');
+const places = require('./routes/places');
+const users = require('./routes/users');
 
-
-//
+//Routers
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 db.connect();
@@ -20,7 +20,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Routes
 app.use('/places', places);
+app.use('/users', users)
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
