@@ -1,6 +1,6 @@
 const Place = require('../models/Place');
 const upload = require('../config/upload');
-
+const uploader = require('../models/Uploader');
 
 function find(req,res,next){
   Place.findById(req.params.id)
@@ -28,7 +28,7 @@ function show(req,res){
   res.json(req.place);
 }
 
-function create(req,res){
+function create(req,res,next){
   //Crear nuevos lugares
   Place.create({
     title: req.body.title,
@@ -37,11 +37,11 @@ function create(req,res){
     openHour: req.body.openHour,
     closeHour: req.body.closeHour
     }).then(doc => {
-      res.json(doc);
-      
+      req.place = doc;
+      next();
     }).catch(err=>{
       console.log(err);
-      res.json(err);
+      next(err);
     });
 }
 
@@ -82,4 +82,27 @@ function multerMiddlware(){
   ])
 }
 
-module.exports = {index,create,show,destroy,update, find, multerMiddlware};
+function saveImage(req,res){
+  if (req.place){
+    const files = ['avatar', 'cover'];
+    const promises = [];
+    files.forEach(imageType => {
+      if(req.files && req.files[imageType]){
+        const path = req.files[imageType][0].path;
+        promises.push(req.place.updateImage(path,imageType));
+      }
+    })
+    Promise.all(promises).then(results =>{
+        console.log(results);
+        res.json(req.place);
+      }).catch(err=>{
+        console.log(err);
+        res.json(err);
+      })
+  }else{
+    res.status(422).json({
+      error: req.error || 'Cloud not save place'
+    })
+  }
+}
+module.exports = {index,create,show,destroy,update, find, multerMiddlware,saveImage};

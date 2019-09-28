@@ -6,7 +6,11 @@ let router = express.Router();
 
 router.route('/')
   .get(placesController.index)
-  .post(placesController.multerMiddlware(), placesController.create)
+  .post(
+    placesController.multerMiddlware(), 
+    placesController.create, 
+    placesController.saveImage
+  )
 
 
 router.route('/:id')
