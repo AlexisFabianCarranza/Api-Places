@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   jwtMiddleware({secret: secret.jwtSecret})
-    .unless({path: ['/sessions', '/users'], method: 'GET'}));
+    .unless({path: ['/sessions','/users'],method:'GET'}));
 
 //Routes
 app.use('/places', places);

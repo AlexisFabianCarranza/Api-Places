@@ -10,8 +10,5 @@ router.route('/')
     sessionsController.generateToken,
     sessionsController.sendToken
   )
-  /*.get(
-    usersController.destroyAll
-  )*/
 
 module.exports = router;
