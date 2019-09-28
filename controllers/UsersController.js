@@ -16,8 +16,9 @@ function create(req,res,next){
         })
 }
 
-function destroyAll(req,res){
+/*function destroyAll(req,res){
     console.log("SE destruyo todo");
     User.remove({}).then(r=>res.json({}));
-}
-module.exports = {create, destroyAll}
+}*/
+
+module.exports = {create}
