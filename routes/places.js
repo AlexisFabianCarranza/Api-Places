@@ -1,10 +1,14 @@
 const express = require('express');
+
 const placesController = require('../controllers/PlacesController')
+
 let router = express.Router();
 
 router.route('/')
   .get(placesController.index)
-  .post(placesController.create)
+  .post(placesController.multerMiddlware(), placesController.create)
+
+
 router.route('/:id')
   .get(placesController.find,placesController.show)
   .put(placesController.find,placesController.update)

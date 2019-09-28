@@ -1,4 +1,6 @@
 const Place = require('../models/Place');
+const upload = require('../config/upload');
+
 
 function find(req,res,next){
   Place.findById(req.params.id)
@@ -36,6 +38,7 @@ function create(req,res){
     closeHour: req.body.closeHour
     }).then(doc => {
       res.json(doc);
+      
     }).catch(err=>{
       console.log(err);
       res.json(err);
@@ -47,16 +50,19 @@ function update(req,res){
   let attributes = ['title', 'description', 'accepsCreditCard', 'openHour', 'closeHour'];
   let placeParams = {};
   attributes.forEach(attr=>{
-    if(Objects.prototype.hasOwnProperty.call(req.body,attr))
+    if(Object.prototype.hasOwnProperty.call(req.body,attr)) {
       placeParams[attr] = req.body[attr];
+    }
   })
+  console.log(placeParams);
   req.place = Object.assign(req.place,placeParams);
-  req.place.save().then(doc=>{
-    res.json(doc);
-  }).catch(err=>{
-    console.log(err);
-    res.json(err);
-  });
+  req.place.save()
+    .then(doc=>{
+      res.json(doc);
+    }).catch(err=>{
+      console.log(err);
+      res.json(err);
+    });
 }
 
 function destroy(req,res){
@@ -69,4 +75,11 @@ function destroy(req,res){
     })
 }
 
-module.exports = {index,create,show,destroy,update, find};
+function multerMiddlware(){
+  return upload.fields([
+    {name: 'avatar', maxCount: 1},
+    {name: 'cover', maxCount: 1}
+  ])
+}
+
+module.exports = {index,create,show,destroy,update, find, multerMiddlware};
